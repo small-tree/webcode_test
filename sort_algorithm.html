@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+
+<script type="text/javascript">
+  // 资料 https://www.cnblogs.com/onepixel/articles/7674659.html
+  // 十大经典排序  https://zhuanlan.zhihu.com/p/41923298
+  /**
+    优化后的冒泡排序，
+  */
+  function sort_buble() {
+    var massArray = [2, 1, 3, 4, 5, 6, 7, 8, 9, 10];
+    console.log(massArray.toString());
+    // 记录最后交换的角标，如果一轮下来没有交换的话，代表排序完成
+    var lastChangeIndex = massArray.length;
+    for (; lastChangeIndex > 0; lastChangeIndex--) {
+      var changeIndex = 0;
+      for (var j = 0; j < lastChangeIndex; j++) {
+        if (massArray[j] > massArray[j + 1]) {
+          var temp = massArray[j];
+          massArray[j] = massArray[j + 1];
+          massArray[j + 1] = temp;
+          changeIndex = j + 1;
+        }
+      }
+      lastChangeIndex = changeIndex;
+
+      console.log("sort after:" + massArray.toString())
+    }
+  }
+
+
+  /**
+   选择排序，一轮排序找到小值得索引，然后交换位置
+  */
+  function selectionSort() {
+    var arr = [1, 3, 5, 7, 9, 2, 4, 6, 8, 10];
+    var len = arr.length;
+    var minIndex, temp;
+    for (var i = 0; i < len - 1; i++) {
+      minIndex = i;
+      for (var j = i + 1; j < len; j++) {
+        if (arr[j] < arr[minIndex]) { // 寻找最小的数
+          minIndex = j; // 将最小数的索引保存
+        }
+      }
+      temp = arr[i];
+      arr[i] = arr[minIndex];
+      arr[minIndex] = temp;
+      console.log(arr.toString());
+    }
+    return arr;
+  }
+
+
+  function test_quickSort() {
+    var arr = [1, 3, 5, 7, 9, 2, 4, 6, 8, 10];
+    quickSort(arr, 0, arr.length - 1);
+  }
+  /**
+    快速排序：把第0个元素 当做中轴，然后把大于中轴的放在中轴后边，小于的放中轴前边。
+            在然后把数组分层两部分，在分别进行中轴查询
+   */
+  function quickSort(arr, low, high) {
+    if (low < high) {
+      // 找到中轴index，并把数组排列成，小与中轴的在前边、大于中轴的在后边
+      var middle = quickSort_getMiddle(arr, low, high);
+      console.log(arr);
+      quickSort(arr, low, middle - 1);
+      quickSort(arr, middl + 1, high);
+    }
+  }
+
+  function quickSort_getMiddle(arr, low, high) {
+    var temp = arr[low];
+    while (low < high) {
+      // 找到数组尾部，比中轴小的
+      if (low < high && arr[high] >= temp) {
+        high--;
+      }
+      // 小的放前边
+      arr[low] = arr[high];
+      // 找到数组前部，比中轴大的
+      while (low < high && arr[low] <= temp) {
+        low--;
+      }
+      arr[high] = arr[low];
+    }
+    arr[low] = temp;
+    return low;
+  }
+
+  /**
+    插入排序：从第一个开始，排序好当前角标之前的数据。
+            然后进行下一轮，把当前角标的值插入到合适的位置
+  */
+  function insertSort() {
+    var arr = [1, 3, 5, 7, 9, 2, 4, 6, 8, 10];
+    console.log(arr);
+
+    var size = arr.length;
+    var temp = 0;
+    var j = 0;
+    for (var i = 0; i < arr.length; i++) {
+      temp = arr[i];
+      for (j = i; j > 0 && temp < arr[j - 1]; j--) {
+        arr[j] = arr[j - 1];
+        // arr[i]
+      }
+      arr[j] = temp;
+    }
+    console.log(arr);
+  }
+
+  /**
+  希尔排序：先对数组进行分割，分别进行插入排序。待数组基本有序后，在对数组进行整体插入排序
+  */
+  function shellSort() {
+    var arr = [1, 3, 5, 7, 9, 2, 4, 6, 8, 10];
+    console.log(arr);
+    var j = 0;
+    var temp = 0;
+    //每次将步长缩短为原来的一半
+    for (var increment = parseInt(arr.length / 2); increment > 0;
+      (increment = parseInt(increment /= 2))) {
+      for (var i = increment; i < arr.length; i++) {
+        temp = arr[i];
+        for (j = i; j >= increment; j -= increment) {
+          if (temp > arr[j - increment]) //如想从小到大排只需修改这里
+          {
+            arr[j] = arr[j - increment];
+          } else {
+            break;
+          }
+        }
+        arr[j] = temp;
+      }
+    }
+    console.log(arr);
+  }
+
+
+  /**
+     归并排序：合并两个有序的数字，并排序
+    */
+  function merginAndSort() {
+    var arr = [1, 3, 5, 7, 9, 2, 4, 6, 8, 10];
+    merginAndSort_sort(arr,0,arr.length-1);
+    console.log(arr);
+  }
+
+  function merginAndSort_sort(arr, low, high) {
+    var middle = parseInt((high+low)/2);
+    if (low < high) {
+      merginAndSort_sort(arr, low, middle);
+      merginAndSort_sort(arr, middle + 1, high);
+      merginAndSort_merge(arr, low, middle, high);
+    }
+  }
+
+  function merginAndSort_merge(arr, low, middle, high) {
+    var tempArr = new Array(high - low + 1); // 创建完整数组长度
+    var left = low,
+      right = middle + 1;
+    var tempIndex = 0;
+    // 把小的值copy 到tempArr 中
+    while (left <= middle && right <= high) {
+      if (arr[left] < arr[right]) {
+        tempArr[tempIndex++] = arr[left++];
+      } else {
+        tempArr[tempIndex++] = arr[right++];
+      }
+    }
+
+    // 把左边数组剩余的大值，放到数组中
+    while (left<= middle) {
+      tempArr[tempIndex++] = arr[left++];
+    }
+
+    // 把右边的数字剩余的大值，放到数组中
+    while (right <= high) {
+      tempArr[tempIndex++] = arr[right++];
+    }
+
+    // 把临时数组的值 复制到原始数组中
+    for (var i = 0; i < tempArr.length; i++) {
+      arr[low+i] = tempArr[i];
+    }
+  }
+
+
+</script>
+
+
+<body>
+  <!-- <div>
+  <ul>
+    <li></li>
+  </ul>
+</div> -->
+  <li>冒泡排序</li>
+  <li>选择排序</li>
+  <li>快速排序</li>
+  <li>插入排序</li>
+  <li>希尔排序</li>
+  <li>归并排序</li>
+  <li>堆排序</li>
+  <li>基数排序</li>
+  <li>计数排序</li>
+  <li>桶排序</li>
+
+</body>
+
+</html>
