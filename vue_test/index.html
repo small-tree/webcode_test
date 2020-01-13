@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Welcome to Vue</title>
+  <script src="https://unpkg.com/vue"></script>
+</head>
+
+<style>
+  .class1 {
+    background: #444;
+    color: #eee;
+  }
+</style>
+
+
+<body>
+  <h2>vue 值插入</h2>
+  <div id="app">
+    <li>插入属性值：{{greeting}}</li>
+    <li>方法调用：{{testmethod()}}</li>
+
+    <h4>v-html</h4>
+    <div v-html="vhtml_code">
+    </div>
+
+
+    <h4>属性：指定属性值</h4>
+    <div v-bind:class="{'class1': true}">
+      v-bind:class 指令
+    </div>
+
+    <h4>js 表达式</h4>
+    {{5 + 6}} </br>
+    {{boolean?'yes':'no'}} </br>
+    {{message.split('').reverse().join('')}}
+  </div>
+
+  <h1>指令</h1>
+  <div id="command">
+    <div v-if='seen'>
+      你能看见我吗
+    </div>
+    <h2>参数</h2>
+    <a v-bind:href="url">菜鸟教程：vue 语法</a>
+    <h2>修饰符 没看懂</h2>
+  </div>
+
+  <h1>用户输入</h1>
+  <div id="input">
+    <h2>v-model 双向数据绑定</h2>
+    {{message}} </br>
+    <input v-model="message" type="text" name="" value="">
+  </div>
+
+  <h1>过滤器</h1>
+  <div id="filter"></div>
+  {{ message | capitalize }}
+
+  <h1>缩写</h1>
+  v-bind:href    :href <br>
+  v-on:click @click
+
+  <script>
+
+  new Vue({
+    el: '#filter',
+    data: {
+  	message: 'runoob'
+    },
+    filters: {
+      capitalize: function (value) {
+        if (!value) return ''
+        value = value.toString()
+        return value.charAt(0).toUpperCase() + value.slice(1)
+      }
+    }
+  });
+    new Vue({
+      el:'#input',
+      data:{
+        message:'original text'
+      }
+    });
+
+
+    var command = new Vue({
+      el: '#command',
+      data: {
+        seen: false,
+        url:'https://www.runoob.com/vue2/vue-template-syntax.html'
+      }
+    });
+
+
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        boolean: false,
+        message: "abcdefg",
+        greeting: 'a==1',
+        vhtml_code: '<a href=\'www.baid.com\'>百度一下</a>',
+        docsURL: 'http://vuejs.org/guide/',
+        discordURL: 'https://chat.vuejs.org',
+        forumURL: 'http://forum.vuejs.org/'
+      },
+      methods: {
+        humanizeURL: function(url) {
+          return url
+            .replace(/^https?:\/\//, '')
+            .replace(/\/$/, '')
+        },
+
+        testmethod: function() {
+          return "hahhahha";
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
